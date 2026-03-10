@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Nourish — Daily Calorie Planner</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Nunito:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <span class="brand-icon">🌿</span>
+      <h1><em>Nourish</em></h1>
+    </div>
+    <p class="sub">Your personal daily calorie planner</p>
+  </header>
+
+  <!-- Step indicators -->
+  <div class="steps-nav">
+    <div class="sn-item">
+      <div class="sn-circle done" id="sn1">1</div>
+      <div class="sn-label">Profile</div>
+    </div>
+    <div class="sn-line" id="sl1"></div>
+    <div class="sn-item">
+      <div class="sn-circle" id="sn2">2</div>
+      <div class="sn-label">Food</div>
+    </div>
+    <div class="sn-line" id="sl2"></div>
+    <div class="sn-item">
+      <div class="sn-circle" id="sn3">3</div>
+      <div class="sn-label">Summary</div>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <!-- ══════════════════════════════════════════════
+       CARD 1 — PROFILE & GOAL
+  ══════════════════════════════════════════════ -->
+    <div class="card">
+      <div class="card-top">
+        <div class="step-num">01</div>
+        <h2>Profile &amp; Goal</h2>
+        <span class="pill">Local calculation</span>
+      </div>
+      <div class="card-body">
+
+        <!-- Personal details -->
+        <div class="fg">
+          <div class="field">
+            <label>Age</label>
+            <input type="number" id="age" placeholder="e.g. 28" min="10" max="100" />
+          </div>
+          <div class="field">
+            <label>Gender</label>
+            <select id="gender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Height (cm)</label>
+            <input type="number" id="height" placeholder="e.g. 170" />
+          </div>
+          <div class="field">
+            <label>Weight (kg)</label>
+            <input type="number" id="weight" placeholder="e.g. 65" />
+          </div>
+        </div>
+
+        <!-- Activity level -->
+        <div class="sdiv"><span>Activity Level</span></div>
+        <div class="act-row">
+          <div class="act-pill active" data-act="sedentary" onclick="pickAct(this)">
+            <span class="ap-ico">🛋️</span>
+            <span class="ap-name">Sedentary</span>
+            <span class="ap-mult">×1.2</span>
+          </div>
+          <div class="act-pill" data-act="light" onclick="pickAct(this)">
+            <span class="ap-ico">🚶</span>
+            <span class="ap-name">Light</span>
+            <span class="ap-mult">×1.375</span>
+          </div>
+          <div class="act-pill" data-act="moderate" onclick="pickAct(this)">
+            <span class="ap-ico">🏃</span>
+            <span class="ap-name">Moderate</span>
+            <span class="ap-mult">×1.55</span>
+          </div>
+          <div class="act-pill" data-act="veryactive" onclick="pickAct(this)">
+            <span class="ap-ico">⚡</span>
+            <span class="ap-name">Very Active</span>
+            <span class="ap-mult">×1.725</span>
+          </div>
+          <div class="act-pill" data-act="athlete" onclick="pickAct(this)">
+            <span class="ap-ico">🏋️</span>
+            <span class="ap-name">Athlete</span>
+            <span class="ap-mult">×1.9</span>
+          </div>
+        </div>
+
+        <!-- Fitness goal -->
+        <div class="sdiv"><span>Fitness Goal</span></div>
+        <div class="goal-row">
+          <div class="goal-card" data-goal="lose" onclick="pickGoal(this)">
+            <span class="gc-ico">📉</span>
+            <div class="gc-name">Lose Weight</div>
+            <div class="gc-desc">−400 kcal deficit</div>
+          </div>
+          <div class="goal-card active" data-goal="maintain" onclick="pickGoal(this)">
+            <span class="gc-ico">⚖️</span>
+            <div class="gc-name">Maintain</div>
+            <div class="gc-desc">Stay at current weight</div>
+          </div>
+          <div class="goal-card" data-goal="gain" onclick="pickGoal(this)">
+            <span class="gc-ico">📈</span>
+            <div class="gc-name">Gain Weight</div>
+            <div class="gc-desc">+400 kcal surplus</div>
+          </div>
+        </div>
+
+        <div id="calcErr" class="err">⚠ Please enter valid Age, Height, and Weight.</div>
+        <button class="btn" onclick="calculateCalories()">🌿 Calculate My Daily Calories</button>
+
+        <!-- Result chips -->
+        <div class="result-row" id="resultRow" style="display:none">
+          <div class="r-chip c1">
+            <div class="rc-lbl">BMR</div>
+            <div class="rc-val" id="rBMR">—</div>
+            <div class="rc-unit">kcal base</div>
+          </div>
+          <div class="r-chip c2">
+            <div class="rc-lbl">Maintenance</div>
+            <div class="rc-val" id="rMaint">—</div>
+            <div class="rc-unit">kcal / day</div>
+          </div>
+          <div class="r-chip c3 highlight">
+            <div class="rc-lbl" id="rGoalLbl">Your Goal</div>
+            <div class="rc-val" id="rRec">—</div>
+            <div class="rc-unit">kcal / day</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+       CARD 2 — FOOD INTAKE
+  ══════════════════════════════════════════════ -->
+    <div class="card">
+      <div class="card-top">
+        <div class="step-num">02</div>
+        <h2>Food Intake Tracker</h2>
+        <span class="pill">Local calculation</span>
+      </div>
+      <div class="card-body">
+
+        <div class="food-input">
+          <div class="field">
+            <label>Food Name</label>
+            <input type="text" id="foodName" placeholder="e.g. Brown Rice" />
+          </div>
+          <div class="field">
+            <label>Grams</label>
+            <input type="number" id="grams" placeholder="200" min="1" />
+          </div>
+          <div class="field">
+            <label>Kcal / 100g</label>
+            <input type="number" id="calPer100" placeholder="130" min="1" />
+          </div>
+          <button class="btn btn-sm sage" onclick="addFood()">＋ Add</button>
+        </div>
+        <div id="foodErr" class="err">⚠ Please fill all fields with valid values.</div>
+
+        <div class="log-header">
+          <span>Today's Food Log</span>
+          <button class="btn btn-sm btn-ghost" onclick="clearFoods()" style="margin-top:0">🗑 Clear All</button>
+        </div>
+
+        <div class="food-list" id="foodList">
+          <div class="empty-state">
+            <span class="es-icon">🥗</span>
+            <p>Nothing logged yet — start adding your meals above.</p>
+          </div>
+        </div>
+
+        <div class="total-strip" id="totalStrip" style="display:none">
+          <span class="ts-label">Total Calories Consumed</span>
+          <span class="ts-val" id="totalVal">0 kcal</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+       CARD 3 — DAILY SUMMARY
+  ══════════════════════════════════════════════ -->
+    <div class="card">
+      <div class="card-top">
+        <div class="step-num">03</div>
+        <h2>Daily Summary</h2>
+        <span class="pill">Local calculation</span>
+      </div>
+      <div class="card-body">
+
+        <div class="fg">
+          <div class="field">
+            <label>Recommended (kcal)</label>
+            <input type="number" id="sumRec" placeholder="Complete Step 1 first" readonly />
+          </div>
+          <div class="field">
+            <label>Consumed (kcal)</label>
+            <input type="number" id="sumCons" placeholder="Auto-filled from Step 2" readonly />
+          </div>
+        </div>
+
+        <div id="sumErr" class="err">⚠ Complete Steps 1 &amp; 2 first.</div>
+        <button class="btn" onclick="checkSummary()">📊 View My Daily Summary</button>
+
+        <div id="summaryOut" style="display:none">
+
+          <div class="sum-grid">
+            <div class="sum-tile st-rec">
+              <div class="st-lbl">Recommended</div>
+              <div class="st-val" id="sRec">—</div>
+              <div class="st-unit">kcal</div>
+            </div>
+            <div class="sum-tile st-cons">
+              <div class="st-lbl">Consumed</div>
+              <div class="st-val" id="sCons">—</div>
+              <div class="st-unit">kcal</div>
+            </div>
+            <div class="sum-tile st-rem" id="sRemTile">
+              <div class="st-lbl">Remaining</div>
+              <div class="st-val" id="sRem">—</div>
+              <div class="st-unit">kcal</div>
+            </div>
+          </div>
+
+          <div class="prog-wrap">
+            <div class="prog-labels">
+              <span>0</span>
+              <span id="progGoalLbl">Goal</span>
+            </div>
+            <div class="prog-track">
+              <div class="prog-fill" id="progFill" style="width:0%"></div>
+            </div>
+          </div>
+
+          <div class="sug" id="sugBox">
+            <div class="sug-icon" id="sugIcon">🌿</div>
+            <div class="sug-content">
+              <h4 id="sugTitle">Suggestion</h4>
+              <p id="sugMsg">—</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- .wrap -->
+
+  <footer>
+    <p>Nourish · 100% Client-side · Mifflin-St Jeor BMR · No database required</p>
+  </footer>
+
+  <div id="toast"></div>
+  <script src="script.js"></script>
+</body>
+
+</html>
